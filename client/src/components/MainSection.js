@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import io from 'socket.io-client'
+const socket = io('/555');
 
-const fullDomain = `${window.location.protocol}//${window.location.hostname}:${process.env.PORT || 5000}`
-console.log(fullDomain)
-const socket = io('/turd');
 export default function MainSection()
 {
     const [paintGrid, updatePaintGrid] = useState([])

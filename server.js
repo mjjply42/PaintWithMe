@@ -4,7 +4,7 @@ const path = require('path')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http);
-const nsp = io.of('/turd')
+const nsp = io.of('/555')
 
 //Body Parser Middleware
 app.use(bodyParser.json());
