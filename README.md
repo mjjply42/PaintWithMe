@@ -2,7 +2,7 @@
 # To initialize the entire project:
 ```console
 npm install
-npm client-install
-npm client-yarn
+npm run client-install
+npm run client-yarn
 npm run dev
 ```

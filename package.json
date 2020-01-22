@@ -1,12 +1,13 @@
 {
-  "name": "comicbookapplication",
+  "name": "paintwithme",
   "version": "1.0.0",
-  "description": "Comic Book Web Application",
+  "description": "Socket Based Painting Application",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^5.0.2",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
@@ -23,12 +24,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mjjply42/TestComicBook-Application.git"
+    "url": "git+https://github.com/mjjply42/PaintWithMe.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mjjply42/TestComicBook-Application/issues"
+    "url": "https://github.com/mjjply42/PaintWithMe.git"
   },
-  "homepage": "https://github.com/mjjply42/TestComicBook-Application/#readme"
+  "homepage": "https://github.com/mjjply42/PaintWithMe/#readme"
 }
