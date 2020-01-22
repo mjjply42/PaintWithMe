@@ -3,8 +3,7 @@ import io from 'socket.io-client'
 
 const fullDomain = `${window.location.protocol}//${window.location.hostname}:${process.env.PORT || 5000}`
 console.log(fullDomain)
-const socket = io();
-/*const socket = openSocket('http://localhost:5000');*/
+const socket = io('/turd');
 export default function MainSection()
 {
     const [paintGrid, updatePaintGrid] = useState([])

@@ -3,7 +3,8 @@ const bodyParser= require('body-parser')
 const path = require('path')
 const app = express()
 const http = require('http').createServer(app)
-var io = require('socket.io')(http);
+const io = require('socket.io')(http);
+const nsp = io.of('/turd')
 
 //Body Parser Middleware
 app.use(bodyParser.json());
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
     });
 }
-io.on('connection', (client) => {
+nsp.on('connection', (client) => {
     console.log('a user connected');
     client.on('test-send', (test) => {
         client.broadcast.emit('test-response', test);
