@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import openSocket from 'socket.io-client'
+import io from 'socket.io-client'
 
 const fullDomain = `${window.location.protocol}//${window.location.hostname}:${process.env.PORT || 5000}`
 console.log(fullDomain)
-const socket = openSocket(fullDomain);
+const socket = io();
 /*const socket = openSocket('http://localhost:5000');*/
 export default function MainSection()
 {
