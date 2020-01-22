@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import openSocket from 'socket.io-client'
 
-const socket = openSocket('http://localhost:5000');
+const fullDomain = `${window.location.protocol}//${window.location.hostname}:${process.env.PORT || 5000}`
+console.log(fullDomain)
+const socket = openSocket(fullDomain);
+/*const socket = openSocket('http://localhost:5000');*/
 export default function MainSection()
 {
     const [paintGrid, updatePaintGrid] = useState([])
@@ -43,9 +46,9 @@ export default function MainSection()
     }
 
     useEffect(() => {
+        console.log(window.location.origin)
         buildGrid()
-
-        socket.on('test-response', (message) => console.log(message))
+        socket.on('test-response', (message) => updatePaintGrid(JSON.parse(message)))
     },[])
 
 

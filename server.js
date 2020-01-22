@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 io.on('connection', (client) => {
     console.log('a user connected');
     client.on('test-send', (test) => {
-        client.broadcast.emit('test-response', `Received at ${new Date()}`);
+        client.broadcast.emit('test-response', test);
     })
 });
 const port = process.env.PORT || 5000;
