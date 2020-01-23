@@ -13,7 +13,7 @@ function* setNewSocketConnection() {
     let response = yield call (socketCreate)
     let result = yield response.json()
 
-    yield put({ type: 'store-created-socket', data: result})
+    yield put({ type: 'store-created-socket', data: result.socket})
 }
 
 function* getNewSocketConnection() {

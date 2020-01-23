@@ -5,9 +5,8 @@ const path = require('path')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-let nameSpaces = []
-const nameSpace = io.of('/555')
-nameSpaces.push(nameSpace)
+let connected = 0
+const nameSpace = io.of('/500')
 
 const createNameSpace = (req, res, next) => {
     let socketID = 0
@@ -19,7 +18,7 @@ const createNameSpace = (req, res, next) => {
         //if (await socketDoesntExist())
         //    socketID = createNewSocketId()
         socketID = utils.createNewSocketId()
-        res.send(socketID)
+        res.json({socket: `/${socketID}`})
     })
     next()
 }
@@ -38,12 +37,21 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-nameSpaces.forEach((nsp, index) => {
-    nsp.on('connection', (socket) => {
-        console.log('a user connected');
-        socket.on('send-grid', (received) => {
-            socket.broadcast.emit('updated-grid', received);
-        })
+nameSpace.on('connection', (socket) => {
+    connected++
+    console.log('a user connected');
+    socket.join('some room');
+    socket.room = 'some room'
+    socket.on('send-grid', (received) => {
+        console.log(socket.room)
+        socket.broadcast.to(socket.room).emit('some event', received);
+        //socket.broadcast.emit('updated-grid', received);
+    })
+    socket.on('change_room', (newRoom) => {
+        console.log("CHNAGING ROOM: ", newRoom)
+        socket.leave(socket.room)
+        socket.join(newRoom)
+        socket.room = newRoom
     })
 })
 const port = process.env.PORT || 5000;

@@ -1,5 +1,5 @@
 const defaultState = {
-    socketRoute: false
+    socketRoute: ""
 }
 
 const navState = (state = defaultState, action) => {

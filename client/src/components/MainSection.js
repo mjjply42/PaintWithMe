@@ -3,17 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
 import Button from '@material-ui/core/Button'
 
-const mainSocket = io('/555');
+let mainSocket = io('/500');
+
 export default function MainSection()
 {
     const [paintGrid, updatePaintGrid] = useState([])
-    const socketRoute = useSelector(state => state.navState.socketRoute)
+    const [roomSocket, updateSocket] = useState()
+    const socketRouteStore = useSelector(state => state.navState.socketRoute)
+    const [currentSocketRoute, updateSocketRoute] = useState('/')
     const [room, updateRoom] = useState()
     const dispatch = useDispatch()
-
-const createNewRoom = async () => {
-    dispatch({type: 'saga-create-socket-pusher'})
-}
 
     const changeColor = (y, x) => {
         let newGrid = JSON.parse(JSON.stringify(paintGrid))
@@ -23,11 +22,15 @@ const createNewRoom = async () => {
             newGrid[y][x] = '#fc2403'
         updatePaintGrid(newGrid)
         shareGrid(newGrid)
-        //sendPaintGrid(newGrid)
     }
 
-    const shareGrid = (grid) => {
-        mainSocket.emit('send-grid', JSON.stringify(grid))
+    const shareGrid = (newGrid) => {
+        mainSocket.emit('send-grid', JSON.stringify(newGrid))
+        mainSocket.on('updated-grid', (message) => updatePaintGrid(JSON.parse(message)))
+    }
+
+    const createNewRoom = async () => {
+        dispatch({type: 'saga-create-socket-pusher'})
     }
 
     const buildGrid = () => {
@@ -52,13 +55,29 @@ const createNewRoom = async () => {
     }
 
     useEffect(() => {
-        mainSocket.on('updated-grid', (message) => updatePaintGrid(JSON.parse(message)))
+        if (mainSocket)
+            mainSocket.on('some event', (message) => updatePaintGrid(JSON.parse(message)))
+    },[mainSocket])
+
+    //newroute due to window url
+    useEffect(() => {
+        if (window.location.pathname !== "/")
+        {
+            updateSocketRoute(`${window.location.pathname}`)
+            mainSocket.emit('change_room', window.location.pathname)
+        }
         buildGrid()
     },[])
 
+    //New route from server directly
     useEffect(() => {
-        console.log("SOCKET NUMBER: ", socketRoute)
-    },[socketRoute])
+        if (socketRouteStore !== "" && socketRouteStore !== " ")
+        {
+            window.location.href = `${window.location.origin}${socketRouteStore}`
+            updateSocketRoute(`${socketRouteStore}`)
+            mainSocket.emit('change_room', socketRouteStore)
+        }
+    },[socketRouteStore])
 
 
     return (
@@ -78,7 +97,7 @@ const createNewRoom = async () => {
                     })}
                 </div>
             </div>
-            <Button onClick={() => createNewRoom()} variant="contained" color="primary" >HEello</Button>
+            <Button onClick={() => createNewRoom()} variant="contained" color="primary" >New Room</Button>
         </div>
     )
 }
