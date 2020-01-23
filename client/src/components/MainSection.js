@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import io from 'socket.io-client'
-const socket = io('/555');
+import Button from '@material-ui/core/Button'
 
+const mainSocket = io('/555');
 export default function MainSection()
 {
     const [paintGrid, updatePaintGrid] = useState([])
+    const socketRoute = useSelector(state => state.navState.socketRoute)
+    const [room, updateRoom] = useState()
+    const dispatch = useDispatch()
+
+const createNewRoom = async () => {
+    dispatch({type: 'saga-create-socket-pusher'})
+}
 
     const changeColor = (y, x) => {
         let newGrid = JSON.parse(JSON.stringify(paintGrid))
@@ -13,12 +22,12 @@ export default function MainSection()
         else
             newGrid[y][x] = '#fc2403'
         updatePaintGrid(newGrid)
-        serverTest(newGrid)
+        shareGrid(newGrid)
         //sendPaintGrid(newGrid)
     }
 
-    const serverTest = (grid) => {
-        socket.emit('test-send', JSON.stringify(grid))
+    const shareGrid = (grid) => {
+        mainSocket.emit('send-grid', JSON.stringify(grid))
     }
 
     const buildGrid = () => {
@@ -43,10 +52,13 @@ export default function MainSection()
     }
 
     useEffect(() => {
-        console.log(window.location.origin)
+        mainSocket.on('updated-grid', (message) => updatePaintGrid(JSON.parse(message)))
         buildGrid()
-        socket.on('test-response', (message) => updatePaintGrid(JSON.parse(message)))
     },[])
+
+    useEffect(() => {
+        console.log("SOCKET NUMBER: ", socketRoute)
+    },[socketRoute])
 
 
     return (
@@ -66,6 +78,7 @@ export default function MainSection()
                     })}
                 </div>
             </div>
+            <Button onClick={() => createNewRoom()} variant="contained" color="primary" >HEello</Button>
         </div>
     )
 }

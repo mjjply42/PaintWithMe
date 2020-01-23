@@ -1,22 +1,18 @@
 const defaultState = {
-    comics: {},
-    bookpage: false
+    socketRoute: false
 }
 
 const navState = (state = defaultState, action) => {
     switch (action.type) {
-        case 'update-comics':
+        case 'saga-create-socket-pusher':
             return {
                 ...state,
-                comics: action.data
             }
-        case 'update-bookpage-signal':
+        case 'store-created-socket':
             return {
                 ...state,
-                bookpage: action.data
+                socketRoute: action.data
             }
-        case 'update-comics-saga-pusher':
-            return state
         default:
             return state
     }

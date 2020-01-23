@@ -1,1 +1,1 @@
-{"API_URL":"https://comicclan.vett.io/comics"}
+{"SOCKET_CREATE_API_URL":"http://localhost:5000/createNewSocket"}
